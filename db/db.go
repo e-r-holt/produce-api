@@ -47,6 +47,14 @@ func (ps ProduceSlice) CreateMany(new []Produce) ProduceSlice {
 //if no change, returns given slice
 func (ps ProduceSlice) DeleteOne(code string) ProduceSlice {
 
+	for i, v := range ps {
+		if v.Code == code {
+			ps[i] = ps[len(ps)-1]
+			//no need to put ps[i] at the end, since it will be discarded
+			return ps[:len(ps)-1]
+		}
+	}
+	return ps
 }
 
 //initialize database for produce API
