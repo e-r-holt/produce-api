@@ -1,7 +1,9 @@
+//Produce database with CR-D operations
 package db
 
 import "errors"
 
+//Structure of db records
 type Produce struct {
 	Code  string
 	Name  string
@@ -24,13 +26,13 @@ func (ps ProduceSlice) ReadOne(code string) (*Produce, error) {
 }
 
 //return all records
-func (ps *ProduceSlice) ReadAll() {
+// func (ps *ProduceSlice) ReadAll() {
+// }
 
-}
-
-//create one record
-func (ps *ProduceSlice) CreateOne() {
-
+//add a new record
+func (ps ProduceSlice) CreateOne(new Produce) ProduceSlice {
+	ps = append(ps, new)
+	return ps
 }
 
 //create many records

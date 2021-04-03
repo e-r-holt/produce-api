@@ -38,3 +38,16 @@ func TestBadRead(t *testing.T) {
 	}
 
 }
+
+func TestCreate(t *testing.T) {
+	data := Database()
+
+	new := Produce{"asdf", "asdf", 3.14}
+	beforeLen := len(data)
+	data = data.CreateOne(new)
+
+	afterLen := len(data)
+	if beforeLen >= afterLen {
+		t.Error("did not properly append")
+	}
+}
