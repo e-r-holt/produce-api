@@ -36,12 +36,16 @@ func (ps ProduceSlice) CreateOne(new Produce) ProduceSlice {
 }
 
 //create many records
-func (ps *ProduceSlice) CreateMany() {
-
+func (ps ProduceSlice) CreateMany(new []Produce) ProduceSlice {
+	for _, v := range new {
+		ps = append(ps, v)
+	}
+	return ps
 }
 
-//delete one record
-func (ps *ProduceSlice) DeleteOne() {
+//delete one record, returns modified slice
+//if no change, returns given slice
+func (ps ProduceSlice) DeleteOne(code string) ProduceSlice {
 
 }
 
