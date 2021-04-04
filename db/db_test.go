@@ -103,3 +103,24 @@ func TestBadDelete(t *testing.T) {
 	}
 
 }
+
+func TestIsDuplicate(t *testing.T) {
+	data := Database()
+	codes := [2]string{"A12T-4GH7-QPL9-3N4M", "bad"}
+
+	//should return true
+	isDup := data.IsDuplicate(codes[0])
+	if isDup == true {
+		t.Log("PASS: found duplicate")
+	} else {
+		t.Error("failed to identify duplicate")
+	}
+
+	//should return false
+	isDup = data.IsDuplicate(codes[1])
+	if isDup == false {
+		t.Log("PASS: found duplicate")
+	} else {
+		t.Error("returned false for code that dne")
+	}
+}

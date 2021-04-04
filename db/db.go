@@ -57,6 +57,19 @@ func (ps ProduceSlice) DeleteOne(code string) (ProduceSlice, error) {
 	return ps, errors.New("given produce code not in db")
 }
 
+//isDuplicate: return bool
+// true == duplicate produce code
+// false == produce code is new
+func (ps ProduceSlice) IsDuplicate(code string) bool {
+	isDup := false
+	for _, v := range ps {
+		if v.Code == code {
+			isDup = true
+		}
+	}
+	return isDup
+}
+
 //initialize database for produce API
 func Database() (db ProduceSlice) {
 	db = ProduceSlice{
