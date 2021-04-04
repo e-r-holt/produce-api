@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -22,7 +23,9 @@ func TestBadRead(t *testing.T) {
 
 	_, err := data.ReadOne("foo")
 	if err == nil {
-		t.Error("did not error on bad code")
+		t.Error("Bad create didn't error")
+	} else {
+		t.Log("PASS: Error'd on bad created")
 	}
 
 }
@@ -45,10 +48,10 @@ func TestCreateMany(t *testing.T) {
 	data := Database()
 	beforeLen := len(data)
 	new := []Produce{
-		Produce{Code: "A12T-4GH7-QPL9-3N4M", Name: "Lettuce", Price: 3.46},
-		Produce{Code: "E5T6-9UI3-TH15-QR88", Name: "Peach", Price: 2.99},
-		Produce{Code: "YRT6-72AS-K736-L4AR", Name: "Green Pepper", Price: 0.79},
-		Produce{Code: "TQ4C-VV6T-75ZX-1RMR", Name: "Gala Apple", Price: 3.59},
+		{Code: "A12T-4GH7-QPL9-3N4M", Name: "Lettuce", Price: 3.46},
+		{Code: "E5T6-9UI3-TH15-QR88", Name: "Peach", Price: 2.99},
+		{Code: "YRT6-72AS-K736-L4AR", Name: "Green Pepper", Price: 0.79},
+		{Code: "TQ4C-VV6T-75ZX-1RMR", Name: "Gala Apple", Price: 3.59},
 	}
 	appendLen := len(new)
 	data = data.CreateMany(new)
@@ -57,4 +60,46 @@ func TestCreateMany(t *testing.T) {
 	if afterLen != (beforeLen + appendLen) {
 		t.Error("did not append all records")
 	}
+}
+
+func TestDeleteOne(t *testing.T) {
+
+	data := Database()
+	beforeLen := len(data)
+	deleteme := "A12T-4GH7-QPL9-3N4M"
+
+	data, err := data.DeleteOne(deleteme)
+	afterLen := len(data)
+	//if no err, delete must have happened
+	if err != nil {
+		fmt.Println(err)
+		afterLen := len(data)
+		if afterLen <= beforeLen {
+			t.Error("did not delete all records")
+		}
+	} else if afterLen < beforeLen {
+		t.Log("Successfully deleted one")
+	} else {
+		t.Error("Failed in deletion")
+	}
+
+}
+
+func TestBadDelete(t *testing.T) {
+	data := Database()
+	beforeLen := len(data)
+	deleteme := "asdf"
+
+	data, err := data.DeleteOne(deleteme)
+	afterLen := len(data)
+	//if no err, delete must have happened
+	if err != nil {
+		afterLen := len(data)
+		if afterLen == beforeLen {
+			t.Log("PASS: code does not exist to delete")
+		}
+	} else if afterLen < beforeLen {
+		t.Log("")
+	}
+
 }
