@@ -119,7 +119,7 @@ func TestIsDuplicate(t *testing.T) {
 	//should return false
 	isDup = data.IsDuplicate(codes[1])
 	if isDup == false {
-		t.Log("PASS: found duplicate")
+		t.Log("PASS: not a dupe")
 	} else {
 		t.Error("returned false for code that dne")
 	}
