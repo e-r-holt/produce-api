@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/e-r-holt/produce-api/db"
@@ -18,9 +17,8 @@ func main() {
 		if err != nil {
 			return c.JSON(data)
 		} else {
-			return c.String("Error")
+			return c.SendString("Error")
 		}
-	)
+	})
 	log.Fatal(app.Listen(":3000"))
-}
 }
