@@ -1,23 +1,32 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
-	"github.com/e-r-holt/produce-api/db"
+	"github.com/e-r-holt/produce-api/db" //"database" operations
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2" //API framework
 )
 
 func main() {
 	db := db.Database()
 	app := fiber.New()
 
-	app.Get("/:produce_code", func(c *fiber.Ctx) error {
-		data, err := db.ReadOne("A12T-4GH7-QPL9-3N4M")
-		if err != nil {
-			return c.JSON(data)
-		} else {
-			return c.SendString("Error")
+	// GET w/ optional parameter
+	app.Get("/:produce_code?", func(c *fiber.Ctx) error {
+		//if param given
+		code := c.Params("produce_code")
+		if code != "" {
+			data, err := db.ReadOne(code)
+			if err != nil {
+				fmt.Println(err)
+				return c.SendString("Couldn't find that one")
+			} else {
+				return c.JSON(data)
+			}
+		} else { //if no param
+			return c.JSON(db)
 		}
 	})
 	log.Fatal(app.Listen(":3000"))
