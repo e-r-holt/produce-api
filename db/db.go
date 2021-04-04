@@ -22,7 +22,7 @@ func (ps ProduceSlice) ReadOne(code string) (*Produce, error) {
 			return &v, nil
 		}
 	}
-	return nil, errors.New("can't find the produce code")
+	return nil, errors.New("can't find the produce code:" + code)
 }
 
 //return all records
