@@ -1,17 +1,26 @@
 package main
 
 import (
-    "log"
+	"fmt"
+	"log"
 
-    "github.com/gofiber/fiber/v2"
+	"github.com/e-r-holt/produce-api/db"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
-    app := fiber.New()
+	db := db.Database()
+	app := fiber.New()
 
-    app.Get("/", func(c *fiber.Ctx) error {
-        return c.SendString("Hello, World 👋!")
-    })
-
-    log.Fatal(app.Listen(":3000"))
+	app.Get("/:produce_code", func(c *fiber.Ctx) error {
+		data, err := db.ReadOne("A12T-4GH7-QPL9-3N4M")
+		if err != nil {
+			return c.JSON(data)
+		} else {
+			return c.String("Error")
+		}
+	)
+	log.Fatal(app.Listen(":3000"))
+}
 }
