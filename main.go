@@ -31,19 +31,37 @@ func main() {
 		}
 	})
 
+	//expect list of json objects to add to DB
 	app.Post("/", func(c *fiber.Ctx) error {
 		c.Accepts("application/json")
+
 		// Get raw body from POST request:
-		new := new(store.Produce)
+		new := new(store.ProduceSlice)
 		if err := c.BodyParser(new); err != nil {
 			return err
+		} else {
+			//dupe checking
+			dupe := false
+			for _, v := range *new {
+				if dupe = db.IsDuplicate(v.Code); dupe {
+					c.SendString("No duplicates allowed: " + v.Code)
+					return c.SendStatus(409)
+				}
+			}
+			if !dupe { //if no dupes, go create
+				c.SendString("Start creating")
+				return c.SendStatus(201)
+			} else {
+				c.SendString("We shouldn't have gotten here!")
+				return c.SendStatus(500)
+			}
 		}
 
-		if !db.IsDuplicate(new.Code) {
-			return c.JSON(db.CreateOne(*new))
-		} else {
-			return c.SendString("Can't create duplicates!")
-		}
+		// if !db.IsDuplicate(new.Code) {
+		// 	return c.JSON(db.CreateOne(*new))
+		// } else {
+		// 	return c.SendString("Can't create duplicates!")
+		// }
 	})
 	log.Fatal(app.Listen(":3000"))
 }
