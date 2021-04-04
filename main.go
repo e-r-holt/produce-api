@@ -39,10 +39,11 @@ func main() {
 			return err
 		}
 
-		// if db.IsDuplicate(new.Code) != true {
-
-		// }
-		return c.JSON(new) // []byte("user=john")
+		if !db.IsDuplicate(new.Code) {
+			return c.JSON(db.CreateOne(*new))
+		} else {
+			return c.SendString("Can't create duplicates!")
+		}
 	})
 	log.Fatal(app.Listen(":3000"))
 }
