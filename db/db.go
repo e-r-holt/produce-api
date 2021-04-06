@@ -30,9 +30,8 @@ func (ps ProduceSlice) ReadOne(code string, res chan ProduceSlice, err chan stri
 // }
 
 //add a new record
-func (ps ProduceSlice) CreateOne(new Produce) ProduceSlice {
-	ps = append(ps, new)
-	return ps
+func (ps ProduceSlice) CreateOne(data *ProduceSlice, new Produce, res chan ProduceSlice) {
+	ps = append(*data, new)
 }
 
 //create many records

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/e-r-holt/produce-api/db"
@@ -12,11 +13,11 @@ import (
 func main() {
 	db := db.Database()
 	app := fiber.New()
-	res := make(chan store.ProduceSlice)
-	err := make(chan string)
 
 	// GET w/ optional parameter
 	app.Get("/:produce_code?", func(c *fiber.Ctx) error {
+		res := make(chan store.ProduceSlice)
+		err := make(chan string)
 		//if param given
 		code := c.Params("produce_code")
 		if code != "" {
@@ -34,35 +35,45 @@ func main() {
 
 	//expect list of json objects to add to DB
 	app.Post("/", func(c *fiber.Ctx) error {
+		res := make(chan store.ProduceSlice)
+		err := make(chan string)
 		c.Accepts("application/json")
 
 		// Get raw body from POST request:
 		new := new(store.ProduceSlice)
-		if err := c.BodyParser(new); err != nil {
-			return err
+		if errorStr := c.BodyParser(new); errorStr != nil {
+			fmt.Println(errorStr)
+			return errorStr
 		} else {
-			//dupe checking
-			dupe := false
+			// dupe checking
+			var dupes store.ProduceSlice
 			for _, v := range *new {
-				if dupe = db.IsDuplicate(v.Code); dupe {
-					c.SendString("No duplicates allowed: " + v.Code)
-					return c.SendStatus(409)
+				go db.ReadOne(v.Code, res, err)
+			}
+			for range *new {
+				select {
+				case dupRec := <-res:
+					dupes = append(dupes, dupRec...)
+					// fmt.Println("found a dupe")
+				case <-err: //err means not dupe
+					// fmt.Println("Not a dupe")
 				}
 			}
-			if !dupe { //if no dupes, go create
-				c.SendString("Start creating")
+
+			if len(dupes) == 0 { //if no dupes, go create
+				for _, v := range *new {
+					go func(v store.Produce) {
+						db = append(db, v)
+					}(v)
+				}
+
+				c.SendString("Added records to the db")
 				return c.SendStatus(201)
 			} else {
-				c.SendString("We shouldn't have gotten here!")
-				return c.SendStatus(500)
+				c.JSON(dupes)
+				return c.SendStatus(409)
 			}
 		}
-
-		// if !db.IsDuplicate(new.Code) {
-		// 	return c.JSON(db.CreateOne(*new))
-		// } else {
-		// 	return c.SendString("Can't create duplicates!")
-		// }
 	})
 	log.Fatal(app.Listen(":3000"))
 }
