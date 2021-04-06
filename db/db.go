@@ -36,9 +36,9 @@ func (ps ProduceSlice) CreateOne(new Produce) ProduceSlice {
 }
 
 //create many records
-func (ps ProduceSlice) CreateMany(new []Produce) ProduceSlice {
+func (ps ProduceSlice) CreateMany(new []Produce, res chan ProduceSlice) {
 	ps = append(ps, new...)
-	return ps
+	res <- ps
 }
 
 //delete one record, returns modified slice
