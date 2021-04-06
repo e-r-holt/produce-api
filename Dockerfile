@@ -12,22 +12,22 @@ COPY . .
 RUN go mod download
 
 # Builds the application as a staticly linked one, to allow it to run on alpine
-RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o app .
+RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o main .
 
 
 # Moving the binary to the 'final Image' to make it smaller
 FROM alpine:latest
 
-WORKDIR /app
+WORKDIR /main
 
 # Create the `public` dir and copy all the assets into it
 # RUN mkdir ./static
 # COPY ./static ./static
 
 # `produce-api` should be replaced here as well
-COPY --from=build /go/src/produce-api/app .
+COPY --from=build /go/src/produce-api/main .
 
 # Exposes port 3000 because our program listens on that port
 EXPOSE 3000
 
-CMD ["./app"]
+CMD ["./main"]
