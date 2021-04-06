@@ -43,12 +43,10 @@ func TestCreateMany(t *testing.T) {
 	res := make(chan ProduceSlice)
 	go data.CreateMany(new, res)
 
-	select {
-	case data := <-res:
-		afterLen := len(data)
-		if afterLen != (beforeLen + appendLen) {
-			t.Error("did not append all records")
-		}
+	data = <-res
+	afterLen := len(data)
+	if afterLen != (beforeLen + appendLen) {
+		t.Error("did not append all records")
 	}
 }
 
