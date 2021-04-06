@@ -1,6 +1,6 @@
 # EricH: shameless copy/paste from https://github.com/gofiber/boilerplate/blob/master/Dockerfile
 # Building the binary of the App
-FROM golang:1.15 AS build
+FROM golang:1.16 AS build
 
 # `produce-api` should be replaced with your project name
 WORKDIR /go/src/produce-api
