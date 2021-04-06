@@ -37,9 +37,7 @@ func (ps ProduceSlice) CreateOne(new Produce) ProduceSlice {
 
 //create many records
 func (ps ProduceSlice) CreateMany(new []Produce) ProduceSlice {
-	for _, v := range new {
-		ps = append(ps, v)
-	}
+	ps = append(ps, new...)
 	return ps
 }
 
