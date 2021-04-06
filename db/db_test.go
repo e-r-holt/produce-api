@@ -29,28 +29,6 @@ func TestRead(t *testing.T) {
 	}
 }
 
-// func TestCreate(t *testing.T) {
-// 	data := Database()
-
-// 	new := Produce{"asdf", "asdf", 3.14}
-// 	beforeLen := len(data)
-// 	res := make(chan ProduceSlice)
-// 	err := make(chan string)
-// 	go data.CreateOne(new, res, err)
-
-// 	go data.ReadOne("bad", res, err)
-// 	select {
-// 	case some := <-res:
-// 		t.Error(some)
-// 	case thing := <-err:
-// 		t.Log(thing)
-// 	}
-// 	afterLen := len(data)
-// 	if beforeLen >= afterLen {
-// 		t.Error("did not properly append")
-// 	}
-// }
-
 func TestCreateMany(t *testing.T) {
 
 	data := Database()
