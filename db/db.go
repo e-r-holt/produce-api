@@ -19,6 +19,7 @@ func (ps ProduceSlice) ReadOne(code string, res chan ProduceSlice, err chan stri
 		if v.Code == code {
 			get := []Produce{v}
 			res <- get
+			return
 		}
 	}
 	err <- code
