@@ -5,29 +5,28 @@ import (
 	"testing"
 )
 
-func TestGoodRead(t *testing.T) {
+func TestRead(t *testing.T) {
 	data := Database()
+	res := make(chan ProduceSlice)
+	err := make(chan string)
 
-	pro, err := data.ReadOne("A12T-4GH7-QPL9-3N4M")
-	if err != nil {
-		t.Error("raised error for good read")
-	}
-	if pro.Name != "Lettuce" {
-		t.Error("pulled the wrong produce")
-	}
-
-}
-
-func TestBadRead(t *testing.T) {
-	data := Database()
-
-	_, err := data.ReadOne("foo")
-	if err == nil {
-		t.Error("Bad create didn't error")
-	} else {
-		t.Log("PASS: Error'd on bad created")
+	//good case
+	go data.ReadOne("A12T-4GH7-QPL9-3N4M", res, err)
+	select {
+	case some := <-res:
+		t.Log(some)
+	case thing := <-err:
+		t.Error(thing)
 	}
 
+	//bad case
+	go data.ReadOne("bad", res, err)
+	select {
+	case some := <-res:
+		t.Error(some)
+	case thing := <-err:
+		t.Log(thing)
+	}
 }
 
 func TestCreate(t *testing.T) {

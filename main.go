@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/e-r-holt/produce-api/db"
@@ -13,18 +12,20 @@ import (
 func main() {
 	db := db.Database()
 	app := fiber.New()
+	res := make(chan store.ProduceSlice)
+	err := make(chan string)
 
 	// GET w/ optional parameter
 	app.Get("/:produce_code?", func(c *fiber.Ctx) error {
 		//if param given
 		code := c.Params("produce_code")
 		if code != "" {
-			data, err := db.ReadOne(code)
-			if err != nil {
-				fmt.Println(err)
-				return c.SendString("Couldn't find that one")
-			} else {
-				return c.JSON(data)
+			go db.ReadOne(code, res, err)
+			select {
+			case record := <-res:
+				return c.JSON(record)
+			case error := <-err:
+				return c.SendString(error)
 			}
 		} else { //if no param
 			return c.JSON(db)
