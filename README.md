@@ -7,11 +7,44 @@ API for interacting with produce database
 <details>
     <summary> / </summary>
 
-Returns all records in the produce database
+Returns all records in the produce database in JSON list format
+
+<pre>
+    <code>
+    Response content
+[
+    {
+        "Name" : "Dragonfruit",
+        "Produce Code" : "1234-1234-1234-1234",
+        "Unit Price" : 3.14
+    },
+    {
+        "Name" : "Orange",
+        "Produce Code" : "4312-4312-4312-4321",
+        "Unit Price" : 2.14
+    }
+]
+    </code>
+</pre>
+</details>
 </details>
 <details>
     <summary> /{produce-code} </summary>
 Returns a specific record identified by the given produce code
+
+<pre>
+    <code>
+    Response content
+[
+    {
+        "Name" : "Dragonfruit",
+        "Produce Code" : "1234-1234-1234-1234",
+        "Unit Price" : 3.14
+    }
+]
+    </code>
+</pre>
+</details>
 </details>
 
 ### POST
@@ -20,9 +53,9 @@ Returns a specific record identified by the given produce code
     <summary> / </summary>
 Returns the record(s) that were added
 
-Payload: List of JSON objects defining produce. Keys: Name, Produce Code, Unit Price
 <pre>
     <code>
+Payload
 [
     {
         "Name" : "Dragonfruit",
@@ -38,4 +71,19 @@ Payload: List of JSON objects defining produce. Keys: Name, Produce Code, Unit P
 <details>
     <summary> /{produce-code} </summary>
 Deletes a specific record identified by the given produce code
+
+Returns the record that was deleted
+<pre>
+    <code>
+    Response content
+[
+    {
+        "Name" : "Dragonfruit",
+        "Produce Code" : "1234-1234-1234-1234",
+        "Unit Price" : 3.14
+    }
+]
+    </code>
+</pre>
+</details>
 </details>
