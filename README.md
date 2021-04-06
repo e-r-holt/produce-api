@@ -21,8 +21,8 @@ Returns a specific record identified by the given produce code
 Returns the record(s) that were added
 
 Payload: List of JSON objects defining produce. Keys: Name, Produce Code, Unit Price
-<p>
-```json
+<pre>
+    <code>
 [
     {
         "Name" : "Dragonfruit",
@@ -30,8 +30,8 @@ Payload: List of JSON objects defining produce. Keys: Name, Produce Code, Unit P
         "Unit Price" : 3.14
     }
 ]
-```
-</p>
+    </code>
+</pre>
 </details>
 
 ### DELETE
