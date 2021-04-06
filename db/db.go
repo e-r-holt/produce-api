@@ -13,16 +13,15 @@ type ProduceSlice []Produce
 
 //return one record
 //arg == Produce Code
-func (ps ProduceSlice) ReadOne(code string) (*Produce, error) {
+func (ps ProduceSlice) ReadOne(code string, res chan ProduceSlice, err chan string) {
 	for _, v := range ps {
 		// fmt.Printf("Index = %d, Value = %s", i, v.Name)
 		if v.Code == code {
-			// fmt.Println()
-			// fmt.Println("Found!")
-			return &v, nil
+			get := []Produce{v}
+			res <- get
 		}
 	}
-	return nil, errors.New("can't find the produce code:" + code)
+	err <- code
 }
 
 //return all records
