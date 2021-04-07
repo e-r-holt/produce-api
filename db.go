@@ -1,14 +1,17 @@
 //Produce database with CR-D operations
-package db
+package main
 
-import "errors"
+import (
+	"errors"
+)
 
 //Structure of db records
 type Produce struct {
-	Code  string
-	Name  string
-	Price float64
+	Code  string  `json:"Produce Code" validate: "required`
+	Name  string  `json:"Name" validate: "required"`
+	Price float64 `json:"Unit Price" validate: "required`
 }
+
 type ProduceSlice []Produce
 
 //return one record
