@@ -4,19 +4,18 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/e-r-holt/produce-api/db"
-	store "github.com/e-r-holt/produce-api/db" //"database" operations
-
 	"github.com/gofiber/fiber/v2" //API framework
+	"gopkg.in/go-playground/validator.v9"
 )
 
 func main() {
-	db := db.Database()
+	db := Database()
+	validate := validator.New()
 	app := fiber.New()
 
 	// GET w/ optional parameter
 	app.Get("/:produce_code?", func(c *fiber.Ctx) error {
-		res := make(chan store.ProduceSlice)
+		res := make(chan ProduceSlice)
 		err := make(chan string)
 		//if param given
 		code := c.Params("produce_code")
@@ -35,18 +34,18 @@ func main() {
 
 	//expect list of json objects to add to DB
 	app.Post("/", func(c *fiber.Ctx) error {
-		res := make(chan store.ProduceSlice)
+		res := make(chan ProduceSlice)
 		err := make(chan string)
 		c.Accepts("application/json")
 
 		// Get raw body from POST request:
-		new := new(store.ProduceSlice)
+		new := new(ProduceSlice)
 		if errorStr := c.BodyParser(new); errorStr != nil {
 			fmt.Println(errorStr)
 			return errorStr
 		} else {
 			// dupe checking
-			var dupes store.ProduceSlice
+			var dupes ProduceSlice
 			for _, v := range *new {
 				go db.ReadOne(v.Code, res, err)
 			}
@@ -62,7 +61,7 @@ func main() {
 
 			if len(dupes) == 0 { //if no dupes, go create
 				for _, v := range *new {
-					go func(v store.Produce) {
+					go func(v Produce) {
 						db = append(db, v)
 					}(v)
 				}
