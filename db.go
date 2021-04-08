@@ -6,12 +6,16 @@ import (
 )
 
 //Structure of db records
+// type Produce struct {
+// 	Code  string  `json:"Produce Code" validate: "required,alphanum"`
+// 	Name  string  `json:"Name" validate: "required,alphanum"`
+// 	Price float64 `json:"Unit Price" validate: "required`
+// }
 type Produce struct {
-	Code  string  `json:"Produce Code" validate: "required,alphanum"`
-	Name  string  `json:"Name" validate: "required,alphanum"`
-	Price float64 `json:"Unit Price" validate: "required`
+	Code  string
+	Name  string
+	Price float64
 }
-
 type ProduceSlice []Produce
 
 //return one record

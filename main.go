@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2" //API framework
 )
 
-func main() {
+func appSetup() *fiber.App {
 	db := Database()
 	app := fiber.New()
 
@@ -72,5 +72,11 @@ func main() {
 			}
 		}
 	})
+
+	return app
+
+}
+func main() {
+	app := appSetup()
 	log.Fatal(app.Listen(":3000"))
 }
