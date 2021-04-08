@@ -5,12 +5,10 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2" //API framework
-	"gopkg.in/go-playground/validator.v9"
 )
 
 func main() {
 	db := Database()
-	validate := validator.New()
 	app := fiber.New()
 
 	// GET w/ optional parameter
