@@ -23,6 +23,7 @@ func appSetup() *fiber.App {
 			case record := <-res:
 				return c.JSON(record)
 			case error := <-err:
+				c.SendStatus(404)
 				return c.SendString(error)
 			}
 		} else { //if no param
