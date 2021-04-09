@@ -2,7 +2,9 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http/httptest"
@@ -99,22 +101,6 @@ func TestGetInalid(t *testing.T) {
 func TestCreateOne(t *testing.T) {
 	app := appSetup()
 
-	url := "/asdf"
-	payload := []Produce{
-		{
-			Code:  "some-ting-real-cool",
-			Name:  "a",
-			Price: 5.46,
-		},
-	}
-	resp, err := app.Test(httptest.NewRequest("GET", url, nil))
-	utils.AssertEqual(t, 404, resp.StatusCode, "Status code")
-	utils.AssertEqual(t, nil, err, "app.Test")
-}
-
-func TestCreateMany(t *testing.T) {
-	app := appSetup()
-
 	url := "/"
 	payload := []Produce{
 		{
@@ -122,43 +108,65 @@ func TestCreateMany(t *testing.T) {
 			Name:  "a",
 			Price: 5.46,
 		},
-		{
-			Code:  "some-tiag-real-cool",
-			Name:  "b",
-			Price: 5.46,
-		},
-		{
-			Code:  "aome-ting-real-cool",
-			Name:  "c",
-			Price: 5.46,
-		},
-		{
-			Code:  "some-ting-real-aool",
-			Name:  "d",
-			Price: 5.46,
-		},
-		{
-			Code:  "some-ting-real-coo",
-			Name:  "e",
-			Price: 5.46,
-		},
-		{
-			Code:  "some-tingreal-cool",
-			Name:  "f",
-			Price: 5.46,
-		},
-		{
-			Code:  "some-ting-realcool",
-			Name:  "g",
-			Price: 5.46,
-		},
-		{
-			Code:  "some-ting-real-cool",
-			Name:  "h",
-			Price: 5.46,
-		},
 	}
-	resp, err := app.Test(httptest.NewRequest("GET", url, payload))
+	fmt.Println(payload)
+	reqPayload, err := json.Marshal(payload)
+	if err != nil {
+		t.Log(err)
+	}
+	resp, err := app.Test(httptest.NewRequest("POST", url, bytes.NewReader(reqPayload)))
 	utils.AssertEqual(t, 201, resp.StatusCode, "Status code")
 	utils.AssertEqual(t, nil, err, "app.Test")
 }
+
+//
+// func TestCreateMany(t *testing.T) {
+// 	app := appSetup()
+//
+// 	url := "/"
+// 	payload := []Produce{
+// 		{
+// 			Code:  "some-ting-real-cool",
+// 			Name:  "a",
+// 			Price: 5.46,
+// 		},
+// 		{
+// 			Code:  "some-tiag-real-cool",
+// 			Name:  "b",
+// 			Price: 5.46,
+// 		},
+// 		{
+// 			Code:  "aome-ting-real-cool",
+// 			Name:  "c",
+// 			Price: 5.46,
+// 		},
+// 		{
+// 			Code:  "some-ting-real-aool",
+// 			Name:  "d",
+// 			Price: 5.46,
+// 		},
+// 		{
+// 			Code:  "some-ting-real-coo",
+// 			Name:  "e",
+// 			Price: 5.46,
+// 		},
+// 		{
+// 			Code:  "some-tingreal-cool",
+// 			Name:  "f",
+// 			Price: 5.46,
+// 		},
+// 		{
+// 			Code:  "some-ting-realcool",
+// 			Name:  "g",
+// 			Price: 5.46,
+// 		},
+// 		{
+// 			Code:  "some-ting-real-cool",
+// 			Name:  "h",
+// 			Price: 5.46,
+// 		},
+// 	}
+// 	resp, err := app.Test(httptest.NewRequest("GET", url, payload))
+// 	utils.AssertEqual(t, 201, resp.StatusCode, "Status code")
+// 	utils.AssertEqual(t, nil, err, "app.Test")
+// }
