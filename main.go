@@ -18,6 +18,8 @@ func appSetup() *fiber.App {
 		//if param given
 		code := c.Params("produce_code")
 		if code != "" {
+			fmt.Printf("GET code: %s", code)
+			fmt.Println()
 			go db.ReadOne(code, res, err)
 			select {
 			case record := <-res:
@@ -27,6 +29,7 @@ func appSetup() *fiber.App {
 				return c.SendString(error)
 			}
 		} else { //if no param
+			fmt.Print("Get ALL")
 			return c.JSON(db)
 		}
 	})
@@ -43,7 +46,7 @@ func appSetup() *fiber.App {
 			fmt.Println(errorStr)
 			return errorStr
 		} else {
-			fmt.Println("Payload: ")
+			fmt.Println("POST Payload: ")
 			fmt.Println(new)
 			// dupe checking
 			var dupes ProduceSlice
@@ -83,6 +86,8 @@ func appSetup() *fiber.App {
 
 		code := c.Params("produce_code")
 		if code != "" {
+			fmt.Printf("DELETE code %s", code)
+			fmt.Println()
 			go db.Delete(code, res, err)
 			select {
 			case data := <-res:

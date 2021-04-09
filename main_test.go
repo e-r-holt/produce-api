@@ -229,3 +229,56 @@ func TestCreateMany(t *testing.T) {
 	}
 	utils.AssertEqual(t, reqPayload, returned, "Payload v Response")
 }
+
+func TestDelValid(t *testing.T) {
+	app := appSetup()
+
+	delMe := []Produce{{"A12T-4GH7-QPL9-3N4M", "Lettuce", 3.46}}
+	//del one good record
+
+	url := "/" + delMe[0].Code
+	resp, err := app.Test(httptest.NewRequest("DELETE", url, nil))
+	utils.AssertEqual(t, nil, err, "app.Test")
+
+	if resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	body, readErr := ioutil.ReadAll(resp.Body)
+	if readErr != nil {
+		t.Error(readErr)
+	}
+
+	respProduce := []Produce{}
+	jsonErr := json.Unmarshal(body, &respProduce)
+	if jsonErr != nil {
+		log.Printf("error decoding response: %v", jsonErr)
+		if e, ok := err.(*json.SyntaxError); ok {
+			log.Printf("syntax error at byte offset %d", e.Offset)
+		}
+		log.Printf("response: %q", body)
+	}
+	expect := []Produce{
+		{"TQ4C-VV6T-75ZX-1RMR", "Gala Apple", 3.59},
+		{"E5T6-9UI3-TH15-QR88", "Peach", 2.99},
+		{"YRT6-72AS-K736-L4AR", "Green Pepper", 0.79},
+	}
+
+	for _, v := range expect {
+		if v.Code == delMe[0].Code {
+			t.Error("Did not delete")
+		}
+	}
+	utils.AssertEqual(t, 200, resp.StatusCode, "Status code")
+}
+
+func TestDelInalid(t *testing.T) {
+	app := appSetup()
+
+	//del one good record
+
+	url := "/asdf"
+	resp, err := app.Test(httptest.NewRequest("DELETE", url, nil))
+	utils.AssertEqual(t, nil, err, "app.Test")
+	utils.AssertEqual(t, 404, resp.StatusCode, "Status code")
+}
