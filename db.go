@@ -3,7 +3,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 )
 
 type Produce struct {
@@ -68,16 +67,17 @@ func (ps ProduceSlice) CreateMany(new []Produce, res chan ProduceSlice) {
 
 //delete one record, returns modified slice
 //if no change, returns given slice
-func (ps ProduceSlice) DeleteOne(code string) (ProduceSlice, error) {
+func (ps ProduceSlice) Delete(code string, res chan ProduceSlice, err chan string) {
 
 	for i, v := range ps {
 		if v.Code == code {
 			ps[i] = ps[len(ps)-1]
+			ps = ps[:len(ps)-1]
+			res <- ps
 			//no need to put ps[i] at the end, since it will be discarded
-			return ps[:len(ps)-1], nil
 		}
 	}
-	return ps, errors.New("given produce code not in db")
+	err <- "given produce code not in db"
 }
 
 //isDuplicate: return bool
