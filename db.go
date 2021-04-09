@@ -24,6 +24,21 @@ func (u *Produce) MarshalJSON() ([]byte, error) {
 		Price: u.Price,
 	})
 }
+func (u *Produce) UnmarshalJSON(data []byte) error {
+	aux := (&struct {
+		Code  string  `json:"Produce Code"`
+		Name  string  `json:"Name"`
+		Price float64 `json:"Unit Price"`
+	}{
+		Code:  u.Code,
+		Name:  u.Name,
+		Price: u.Price,
+	})
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	return nil
+}
 
 //return one record
 //arg == Produce Code
