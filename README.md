@@ -87,3 +87,19 @@ Returns the record that was deleted
 </pre>
 </details>
 </details>
+
+## Docker
+
+<details>
+    <summary> Pull / Run </summary>
+Deletes a specific record identified by the given produce code
+
+Returns the record that was deleted
+<pre>
+    <code>
+docker pull deemaflotchy/produce-api
+docker run -d -p 3000:3000 deemaflotchy/produce-api
+    </code>
+</pre>
+</details>
+</details>
