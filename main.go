@@ -67,7 +67,7 @@ func appSetup() *fiber.App {
 					}(v)
 				}
 
-				c.SendString("Added records to the db")
+				c.JSON(new)
 				return c.SendStatus(201)
 			} else {
 				c.JSON(dupes)
