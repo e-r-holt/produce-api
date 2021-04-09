@@ -15,9 +15,9 @@ type ProduceSlice []Produce
 
 func (u *Produce) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
-		Code  string  `json:"Code"`
-		Name  string  `json:"Name"`
-		Price float64 `json:"Price"`
+		Code  string  `json:"code"`
+		Name  string  `json:"name"`
+		Price float64 `json:"price"`
 	}{
 		Code:  u.Code,
 		Name:  u.Name,
@@ -25,17 +25,17 @@ func (u *Produce) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func (u *Produce) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &struct {
-		Code  string  `json:"Code"`
-		Name  string  `json:"Name"`
-		Price float64 `json:"Price"`
-	}{
-		Code:  u.Code,
-		Name:  u.Name,
-		Price: u.Price,
-	})
-}
+// func (u *Produce) UnmarshalJSON(data []byte) error {
+// 	return json.Unmarshal(data, &struct {
+// 		Code  string  `json:"code"`
+// 		Name  string  `json:"name"`
+// 		Price float64 `json:"price"`
+// 	}{
+// 		Code:  u.Code,
+// 		Name:  u.Name,
+// 		Price: u.Price,
+// 	})
+// }
 
 //return one record
 //arg == Produce Code

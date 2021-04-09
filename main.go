@@ -43,6 +43,8 @@ func appSetup() *fiber.App {
 			fmt.Println(errorStr)
 			return errorStr
 		} else {
+			fmt.Println("Payload: ")
+			fmt.Println(new)
 			// dupe checking
 			var dupes ProduceSlice
 			for _, v := range *new {
