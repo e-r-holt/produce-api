@@ -1,6 +1,14 @@
 # produce-api
 API for interacting with produce database
 
+
+## Start hosting!
+Image is available on Docker hub
+```
+docker pull deemaflotchy/produce-api
+docker run -d -p 3000:3000 deemaflotchy/produce-api
+```
+
 ## API Methods
 ### GET 
 
@@ -87,9 +95,3 @@ Returns the record that was deleted
 </pre>
 </details>
 </details>
-
-## Docker
-```
-docker pull deemaflotchy/produce-api
-docker run -d -p 3000:3000 deemaflotchy/produce-api
-```
