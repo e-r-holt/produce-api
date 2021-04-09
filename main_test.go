@@ -146,54 +146,86 @@ func TestCreateOne(t *testing.T) {
 	utils.AssertEqual(t, reqPayload, returned, "Payload v Response")
 }
 
-//
-// // func TestCreateMany(t *testing.T) {
-// // 	app := appSetup()
-// //
-// // 	url := "/"
-// // 	payload := []Produce{
-// // 		{
-// // 			Code:  "some-ting-real-cool",
-// // 			Name:  "a",
-// // 			Price: 5.46,
-// // 		},
-// // 		{
-// // 			Code:  "some-tiag-real-cool",
-// // 			Name:  "b",
-// // 			Price: 5.46,
-// // 		},
-// // 		{
-// // 			Code:  "aome-ting-real-cool",
-// // 			Name:  "c",
-// // 			Price: 5.46,
-// // 		},
-// // 		{
-// // 			Code:  "some-ting-real-aool",
-// // 			Name:  "d",
-// // 			Price: 5.46,
-// // 		},
-// // 		{
-// // 			Code:  "some-ting-real-coo",
-// // 			Name:  "e",
-// // 			Price: 5.46,
-// // 		},
-// // 		{
-// // 			Code:  "some-tingreal-cool",
-// // 			Name:  "f",
-// // 			Price: 5.46,
-// // 		},
-// // 		{
-// // 			Code:  "some-ting-realcool",
-// // 			Name:  "g",
-// // 			Price: 5.46,
-// // 		},
-// // 		{
-// // 			Code:  "some-ting-real-cool",
-// // 			Name:  "h",
-// // 			Price: 5.46,
-// // 		},
-// // 	}
-// // 	resp, err := app.Test(httptest.NewRequest("GET", url, payload))
-// // 	utils.AssertEqual(t, 201, resp.StatusCode, "Status code")
-// // 	utils.AssertEqual(t, nil, err, "app.Test")
-// // }
+func TestCreateMany(t *testing.T) {
+	app := appSetup()
+
+	url := "/"
+	reqPayload, err := json.Marshal([]Produce{
+		{
+			Code:  "some-ting-real-cool",
+			Name:  "a",
+			Price: 5.46,
+		},
+		{
+			Code:  "some-tiag-real-cool",
+			Name:  "b",
+			Price: 5.46,
+		},
+		{
+			Code:  "aome-ting-real-cool",
+			Name:  "c",
+			Price: 5.46,
+		},
+		{
+			Code:  "some-ting-real-aool",
+			Name:  "d",
+			Price: 5.46,
+		},
+		{
+			Code:  "some-ting-real-coo",
+			Name:  "e",
+			Price: 5.46,
+		},
+		{
+			Code:  "some-tingreal-cool",
+			Name:  "f",
+			Price: 5.46,
+		},
+		{
+			Code:  "some-ting-realcool",
+			Name:  "g",
+			Price: 5.46,
+		},
+		{
+			Code:  "some-ting-real-cool",
+			Name:  "h",
+			Price: 5.46,
+		},
+	})
+	// fmt.Println(payload)
+	if err != nil {
+		t.Error(err)
+	}
+	body := string(reqPayload)
+	// fmt.Println(body)
+	req := httptest.NewRequest("POST", url, strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := app.Test(req)
+	utils.AssertEqual(t, 201, resp.StatusCode, "Status code")
+	utils.AssertEqual(t, nil, err, "app.Test")
+
+	if resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	returned, readErr := ioutil.ReadAll(resp.Body)
+	if readErr != nil {
+		t.Error(readErr)
+	}
+
+	respProduce := []Produce{}
+	// val, err := strconv.Unquote(string(returned))
+	// if err != nil {
+	// 	t.Error(err)
+	// }
+	jsonErr := json.Unmarshal(returned, &respProduce)
+	if jsonErr != nil {
+		log.Printf("error decoding response: %v", jsonErr)
+		if e, ok := err.(*json.SyntaxError); ok {
+			log.Printf("syntax error at byte offset %d", e.Offset)
+		}
+		log.Printf("response: %q", returned)
+	}
+	utils.AssertEqual(t, reqPayload, returned, "Payload v Response")
+}
