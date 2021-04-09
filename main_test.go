@@ -120,29 +120,30 @@ func TestCreateOne(t *testing.T) {
 	resp, err := app.Test(req)
 	utils.AssertEqual(t, 201, resp.StatusCode, "Status code")
 	utils.AssertEqual(t, nil, err, "app.Test")
-	//
-	// 	if resp.Body != nil {
-	// 		defer resp.Body.Close()
-	// 	}
-	//
-	// 	returned, readErr := ioutil.ReadAll(resp.Body)
-	// 	if readErr != nil {
-	// 		t.Error(readErr)
-	// 	}
-	//
-	// 	respProduce := []Produce{}
-	// 	val, err := strconv.Unquote(string(returned))
-	// 	if err != nil {
-	// 		t.Error(err)
-	// 	}
-	// 	jsonErr := json.Unmarshal([]byte(val), &respProduce)
-	// 	if jsonErr != nil {
-	// 		log.Printf("error decoding response: %v", jsonErr)
-	// 		if e, ok := err.(*json.SyntaxError); ok {
-	// 			log.Printf("syntax error at byte offset %d", e.Offset)
-	// 		}
-	// 		log.Printf("response: %q", val)
-	// 	}
+
+	if resp.Body != nil {
+		defer resp.Body.Close()
+	}
+
+	returned, readErr := ioutil.ReadAll(resp.Body)
+	if readErr != nil {
+		t.Error(readErr)
+	}
+
+	respProduce := []Produce{}
+	// val, err := strconv.Unquote(string(returned))
+	// if err != nil {
+	// 	t.Error(err)
+	// }
+	jsonErr := json.Unmarshal(returned, &respProduce)
+	if jsonErr != nil {
+		log.Printf("error decoding response: %v", jsonErr)
+		if e, ok := err.(*json.SyntaxError); ok {
+			log.Printf("syntax error at byte offset %d", e.Offset)
+		}
+		log.Printf("response: %q", returned)
+	}
+	utils.AssertEqual(t, reqPayload, returned, "Payload v Response")
 }
 
 //
